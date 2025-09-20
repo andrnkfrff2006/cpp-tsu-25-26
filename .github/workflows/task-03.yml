@@ -208,7 +208,7 @@ jobs:
         run: |
           mkdir -p secret-tests
           # Use dynamic secret name based on branch name
-          SECRET_NAME="$(echo '${{ env.BRANCH_NAME }}' | tr '[:lower:]' '[:upper:]' | tr '-' '_')_TESTS"
+          SECRET_NAME="$(echo '${{ env.BRANCH_NAME }}' | tr '[:lower:]' '[:upper:]' | tr '-' '_')_KEY"
           echo "Using secret: $SECRET_NAME"
           SECRET_VALUE=$(echo "$SECRETS_JSON" | jq -r ".[\"$SECRET_NAME\"]")
           if [ "$SECRET_VALUE" = "null" ] || [ -z "$SECRET_VALUE" ]; then
