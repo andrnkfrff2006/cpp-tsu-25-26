@@ -1,7 +1,7 @@
 #include <iostream>
 int main() 
 {
-    long long res = 0;
+    long long int res = 0;
     int a;
     int pos;
     int n;
