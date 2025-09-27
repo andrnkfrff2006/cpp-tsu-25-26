@@ -27,9 +27,9 @@ int main()
       }
     }
     if (sum_q == 1) {
-        std::cout << "Куплен товар за " << sum_price << " рублей";
+        std::cout << "Куплен товар за " << sum_price << " рублей" << std::endl;
     }  else if (sum_q > 1) {
-        std::cout << "Куплено " << sum_q << " штук товара за " << sum_price << " рублей";
+        std::cout << "Куплено " << sum_q << " штук товара за " << sum_price << " рублей" << std::endl;
     }
     return 0;
 }
