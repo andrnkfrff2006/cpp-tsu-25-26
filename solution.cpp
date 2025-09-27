@@ -10,6 +10,6 @@ int main()
       std::cin >> a >> pos; 
       res = res + a * pos;
     }
-    std::cout << res;
+    std::cout << res << std::endl;
     return 0;
 }
