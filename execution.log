@@ -1,0 +1,70 @@
+hi
+total 24K
+drwxrwxrwx 1 leumeen leumeen 4.0K Oct 29 12:20 ./
+drwxrwxrwx 1 leumeen leumeen 4.0K Oct 29 12:17 ../
+-rwxrwxrwx 1 leumeen leumeen   28 Oct  4 13:51 .gitignore
+-rwxrwxrwx 1 leumeen leumeen  168 Oct  4 13:51 CMakeLists.txt
+-rwxrwxrwx 1 leumeen leumeen 3.9K Oct  4 13:51 README.md
+-rwxrwxrwx 1 leumeen leumeen  17K Oct 29 12:18 a.out
+-rwxrwxrwx 1 leumeen leumeen    3 Oct 29 12:20 execution.log
+-rwxrwxrwx 1 leumeen leumeen    3 Oct 29 12:20 execution.logsdfgsdfhgsd
+-rwxrwxrwx 1 leumeen leumeen   82 Oct  4 13:51 hi.cpp
+-rwxrwxrwx 1 leumeen leumeen  266 Oct  4 13:51 names.cpp
+-rwxrwxrwx 1 leumeen leumeen   83 Oct  4 13:51 ola.cpp
+ola
+.
+├── CMakeLists.txt
+├── README.md
+├── build
+│   ├── a.out
+│   └── ola.exe
+├── execution.log
+├── execution.logsdfgsdfhgsd
+├── hi.cpp
+├── names.cpp
+└── ola.cpp
+
+2 directories, 9 files
+00000000000011a4 T _fini
+0000000000001000 T _init
+0000000000001080 T _start
+0000000000001169 T main
+ola
+000000000000117c T _fini
+0000000000001000 T _init
+0000000000001060 T _start
+0000000000001150 T main
+0000000000001180 T _Z3barv
+0000000000001160 T _Z3foodd
+0000000000001140 T _Z3foov
+0000000000001150 T _Z3foox
+000000000000119c T _fini
+0000000000001000 T _init
+0000000000001040 T _start
+0000000000001190 T bar
+0000000000001130 T main
+.
+├── CMakeLists.txt
+├── README.md
+├── build
+│   ├── a.out
+│   ├── names.exe
+│   ├── ola.exe
+│   └── ola_clang.exe
+├── execution.log
+├── execution.logsdfgsdfhgsd
+├── hi.cpp
+├── names.cpp
+└── ola.cpp
+
+2 directories, 11 files
+.
+├── CMakeLists.txt
+├── README.md
+├── execution.log
+├── execution.logsdfgsdfhgsd
+├── hi.cpp
+├── names.cpp
+└── ola.cpp
+
+1 directory, 7 files
