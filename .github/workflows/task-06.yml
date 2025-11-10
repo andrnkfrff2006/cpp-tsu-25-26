@@ -8,8 +8,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-run:
-    name: Build and Run (Makefile)
+  run-makefile:
+    name: Run Makefile
     runs-on: ubuntu-latest
     steps:
       - name: Check out base repo task-06
@@ -46,7 +46,7 @@ jobs:
 
       # Updated step: capture clean summary lines and structured outputs
       - name: Run (make run) and capture score
-        id: run_tests
+        id: run_makefile
         shell: bash
         run: |
           set -eu
@@ -63,13 +63,10 @@ jobs:
             echo "$PASSED_LINE"
             echo "$SCORE_LINE"
             echo '__GH__'
-            echo "passed_line=$PASSED_LINE"
-            echo "score_line=$SCORE_LINE"
             echo "score_percent=$SCORE_PERCENT"
           } >> "$GITHUB_OUTPUT"
           # Step summary
           {
-            echo "### Result"
             echo
             if [ -n "$PASSED_LINE" ]; then
               echo "$PASSED_LINE"
@@ -89,7 +86,5 @@ jobs:
         shell: bash
         run: |
           set -eu
-          echo "Using captured outputs:" 
-          echo "${{ steps.run_tests.outputs.passed_line }}"
-          echo "${{ steps.run_tests.outputs.score_line }}"
-          echo "::notice title=Score::${{ steps.run_tests.outputs.score_percent }}"
+          echo "${{ steps.run_makefile.outputs.summary }}"
+          echo "::notice title=Score::${{ steps.run_makefile.outputs.score_percent }}"
