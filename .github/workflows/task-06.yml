@@ -12,12 +12,12 @@ jobs:
     name: Build and Run (Makefile)
     runs-on: ubuntu-latest
     steps:
-      - name: Check out base repo main
+      - name: Check out base repo task-06
         uses: actions/checkout@v4
         with:
           repository: ${{ github.event.pull_request.base.repo.full_name || github.repository }}
-          ref: main
-          path: base_main
+          ref: task-06
+          path: base_task_06
           fetch-depth: 1
 
       - name: Check out PR head
@@ -34,7 +34,7 @@ jobs:
             echo "geometry.hpp not found in PR head checkout" >&2
             exit 1
           fi
-          cp -f pr_head/geometry.hpp base_main/geometry.hpp
+          cp -f pr_head/geometry.hpp base_task_06/geometry.hpp
 
       - name: Show compiler version
         run: g++ --version
@@ -42,15 +42,15 @@ jobs:
       - name: Build (make all)
         run: |
           set -eu
-          make -C base_main all
+          make -C base_task_06 all
 
       - name: Run (make run) and capture score
         id: run_tests
         run: |
           set -eu
           # Run and capture output
-          make -C base_main run | tee base_main/run.log
-          SUMMARY_LINES=$(tail -n2 base_main/run.log || true)
+          make -C base_task_06 run | tee base_task_06/run.log
+          SUMMARY_LINES=$(tail -n2 base_task_06/run.log || true)
           SCORE_LINE=$(echo "$SUMMARY_LINES" | grep -m1 'Score:' || true)
           echo "summary=${SUMMARY_LINES}" >> "$GITHUB_OUTPUT"
           echo "score=${SCORE_LINE}" >> "$GITHUB_OUTPUT"
