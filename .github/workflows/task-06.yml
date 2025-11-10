@@ -1,0 +1,90 @@
+name: Task 06 CI
+
+on:
+  push:
+    branches: [ "task-06" ]
+  pull_request_target:
+    branches: [ "task-06" ]
+  workflow_dispatch:
+
+jobs:
+  run-makefile:
+    name: Run Makefile
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out base repo task-06
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.base.repo.full_name || github.repository }}
+          ref: task-06
+          path: base_task_06
+          fetch-depth: 1
+
+      - name: Check out PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: pr_head
+          fetch-depth: 1
+
+      - name: Copy geometry.hpp from PR into base
+        run: |
+          set -eu
+          if [ ! -f pr_head/geometry.hpp ]; then
+            echo "geometry.hpp not found in PR head checkout" >&2
+            exit 1
+          fi
+          cp -f pr_head/geometry.hpp base_task_06/geometry.hpp
+
+      - name: Show compiler version
+        run: g++ --version
+
+      - name: Build (make all)
+        run: |
+          set -eu
+          make -C base_task_06 all
+
+      # Updated step: capture clean summary lines and structured outputs
+      - name: Run (make run) and capture score
+        id: run_makefile
+        shell: bash
+        run: |
+          set -eu
+          make -C base_task_06 run | tee base_task_06/run.log
+          RAW_LAST=$(tail -n3 base_task_06/run.log || true)
+          # Remove the trailing 'make: Leaving directory' noise if present
+          CLEAN_LAST=$(echo "$RAW_LAST" | grep -v '^make: Leaving directory')
+          PASSED_LINE=$(echo "$CLEAN_LAST" | grep -m1 '^Passed ' || true)
+          SCORE_LINE=$(echo "$CLEAN_LAST" | grep -m1 '^Score:' || true)
+          SCORE_PERCENT=$(echo "$SCORE_LINE" | sed -E 's/.*Score: *([0-9]+%).*/\1/' || true)
+          # Outputs (multiline-safe for combined summary)
+          {
+            echo 'summary<<__GH__'
+            echo "$PASSED_LINE"
+            echo "$SCORE_LINE"
+            echo '__GH__'
+            echo "score_percent=$SCORE_PERCENT"
+          } >> "$GITHUB_OUTPUT"
+          # Step summary
+          {
+            echo
+            if [ -n "$PASSED_LINE" ]; then
+              echo "$PASSED_LINE"
+            else
+              echo "(Passed line missing)"
+            fi
+            if [ -n "$SCORE_LINE" ]; then
+              echo "$SCORE_LINE"
+            else
+              echo "(Score line missing)"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # Updated step: consume outputs rather than static message
+      - name: Expose score as job summary and annotations
+        if: always()
+        shell: bash
+        run: |
+          set -eu
+          echo "${{ steps.run_makefile.outputs.summary }}"
+          echo "::notice title=Score::${{ steps.run_makefile.outputs.score_percent }}"
