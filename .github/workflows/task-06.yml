@@ -46,14 +46,20 @@ jobs:
 
       - name: Run (make run) and capture score
         id: run_tests
+        shell: bash
         run: |
           set -eu
           # Run and capture output
           make -C base_task_06 run | tee base_task_06/run.log
           SUMMARY_LINES=$(tail -n2 base_task_06/run.log || true)
           SCORE_LINE=$(echo "$SUMMARY_LINES" | grep -m1 'Score:' || true)
-          echo "summary=${SUMMARY_LINES}" >> "$GITHUB_OUTPUT"
-          echo "score=${SCORE_LINE}" >> "$GITHUB_OUTPUT"
+          # Write multi-line summary safely to GITHUB_OUTPUT
+          {
+            echo 'summary<<__GH__'
+            echo "$SUMMARY_LINES"
+            echo '__GH__'
+            echo "score=$SCORE_LINE"
+          } >> "$GITHUB_OUTPUT"
           {
             echo "### Result"
             echo
