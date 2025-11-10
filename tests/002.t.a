@@ -1,0 +1,6 @@
+go 0 - OK
+print 100 - OK
+append 7 - OK
+print 7 - OK
+reset - OK
+print 100 - OK
