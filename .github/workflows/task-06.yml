@@ -56,7 +56,7 @@ jobs:
           CLEAN_LAST=$(echo "$RAW_LAST" | grep -v '^make: Leaving directory')
           PASSED_LINE=$(echo "$CLEAN_LAST" | grep -m1 '^Passed ' || true)
           SCORE_LINE=$(echo "$CLEAN_LAST" | grep -m1 '^Score:' || true)
-          SCORE_PERCENT=$(echo "$SCORE_LINE" | sed -E 's/.*Score: *([0-9]+)%.*/\1/' || true)
+          SCORE_PERCENT=$(echo "$SCORE_LINE" | sed -E 's/.*Score: *([0-9]+%).*/\1/' || true)
           # Outputs (multiline-safe for combined summary)
           {
             echo 'summary<<__GH__'
