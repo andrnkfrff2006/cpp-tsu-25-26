@@ -44,34 +44,52 @@ jobs:
           set -eu
           make -C base_task_06 all
 
+      # Updated step: capture clean summary lines and structured outputs
       - name: Run (make run) and capture score
         id: run_tests
         shell: bash
         run: |
           set -eu
-          # Run and capture output
           make -C base_task_06 run | tee base_task_06/run.log
-          SUMMARY_LINES=$(tail -n2 base_task_06/run.log || true)
-          SCORE_LINE=$(echo "$SUMMARY_LINES" | grep -m1 'Score:' || true)
-          # Write multi-line summary safely to GITHUB_OUTPUT
+          RAW_LAST=$(tail -n3 base_task_06/run.log || true)
+          # Remove the trailing 'make: Leaving directory' noise if present
+          CLEAN_LAST=$(echo "$RAW_LAST" | grep -v '^make: Leaving directory')
+          PASSED_LINE=$(echo "$CLEAN_LAST" | grep -m1 '^Passed ' || true)
+          SCORE_LINE=$(echo "$CLEAN_LAST" | grep -m1 '^Score:' || true)
+          SCORE_PERCENT=$(echo "$SCORE_LINE" | sed -E 's/.*Score: *([0-9]+)%.*/\1/' || true)
+          # Outputs (multiline-safe for combined summary)
           {
             echo 'summary<<__GH__'
-            echo "$SUMMARY_LINES"
+            echo "$PASSED_LINE"
+            echo "$SCORE_LINE"
             echo '__GH__'
-            echo "score=$SCORE_LINE"
+            echo "passed_line=$PASSED_LINE"
+            echo "score_line=$SCORE_LINE"
+            echo "score_percent=$SCORE_PERCENT"
           } >> "$GITHUB_OUTPUT"
+          # Step summary
           {
             echo "### Result"
             echo
-            if [ -n "$SUMMARY_LINES" ]; then
-              echo "$SUMMARY_LINES"
+            if [ -n "$PASSED_LINE" ]; then
+              echo "$PASSED_LINE"
             else
-              echo "Summary lines not found."
+              echo "(Passed line missing)"
+            fi
+            if [ -n "$SCORE_LINE" ]; then
+              echo "$SCORE_LINE"
+            else
+              echo "(Score line missing)"
             fi
           } >> "$GITHUB_STEP_SUMMARY"
 
+      # Updated step: consume outputs rather than static message
       - name: Expose score as job summary and annotations
         if: always()
+        shell: bash
         run: |
           set -eu
-          echo "Run finished. See summary above."
+          echo "Using captured outputs:" 
+          echo "${{ steps.run_tests.outputs.passed_line }}"
+          echo "${{ steps.run_tests.outputs.score_line }}"
+          echo "::notice title=Task 06 Score::${{ steps.run_tests.outputs.score_line }}"
