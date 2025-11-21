@@ -55,15 +55,15 @@ struct Point2D {
         return Double { std::sqrt(dx * dx + dy * dy) };
     }
 
-    Double dot(Point2D other) const {
+    double dot(Point2D other) const {
         return x.value * other.x.value + y.value * other.y.value;
     }
 
-    Double cross(Point2D other) const {
+    double cross(Point2D other) const {
         return x.value * other.y.value - y.value * other.x.value;
     }
 
-    Double length_sq() const {
+    double length_sq() const {
         return x.value * x.value + y.value * y.value;
     }
 
