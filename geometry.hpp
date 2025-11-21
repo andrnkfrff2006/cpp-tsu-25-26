@@ -1,4 +1,6 @@
 #include <cmath>
+#include <algorithm>
+#include <limits>
 
 const double EPSILON = 1e-9;
 
